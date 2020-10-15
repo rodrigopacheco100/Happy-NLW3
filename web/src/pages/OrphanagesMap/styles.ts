@@ -40,7 +40,13 @@ export const Container = styled.div`
     }
   }
 
+  .leaflet-container {
+    z-index: 5;
+  }
+
   .createOrphanage {
+    z-index: 10;
+
     position: absolute;
     bottom: 40px;
     right: 40px;

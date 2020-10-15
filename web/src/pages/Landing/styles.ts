@@ -28,7 +28,7 @@ export const Container = styled.div`
     background: url(${landingImg}) no-repeat 80% center;
 
     @media (max-width: 970px) {
-      background-size: 45%;
+      background-size: 50%;
       background-position: 80% 10%;
     }
 
