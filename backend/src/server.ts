@@ -5,6 +5,8 @@ import './database/connection';
 const app = express();
 app.use(express.json());
 
+app.post('/orphanage', (request, response) => {});
+
 app.listen(3333, () => {
   console.log('Server is running!');
 });
