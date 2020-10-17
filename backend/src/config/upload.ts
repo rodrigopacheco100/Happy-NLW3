@@ -1,6 +1,5 @@
 import multer from 'multer';
 import { join } from 'path';
-import { hash } from 'bcrypt';
 
 export default {
   storage: multer.diskStorage({
