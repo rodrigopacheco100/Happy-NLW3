@@ -1,6 +1,13 @@
-import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiPlus } from 'react-icons/fi';
+import { toast, ToastContainer } from 'react-toastify';
 
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
@@ -11,6 +18,8 @@ import Sidebar from '../../components/Sidebar';
 import MapIcon from '../../utils/MapIcon';
 import api from '../../services/api';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 interface Position {
   latitude: number;
   longitude: number;
@@ -20,13 +29,15 @@ export default function CreateOrphanage() {
   const history = useHistory();
 
   const [position, setPosition] = useState<Position>({
-    latitude: -4.1322968,
-    longitude: -38.2368021,
+    latitude: 0,
+    longitude: 0,
   });
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
   const [instructions, setInstructions] = useState('');
   const [opening_hours, setOpeningHours] = useState('');
+  const [opening_hours_start, setOpeningHoursStart] = useState('');
+  const [opening_hours_end, setOpeningHoursEnd] = useState('');
   const [open_on_weekends, setOpenOnWeekends] = useState(true);
   const [images, setImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -35,31 +46,54 @@ export default function CreateOrphanage() {
     setPosition({ latitude: event.latlng.lat, longitude: event.latlng.lng });
   }, []);
 
+  useEffect(() => {
+    setOpeningHours(`de ${opening_hours_start} às ${opening_hours_end}`);
+  }, [opening_hours_start, opening_hours_end]);
+
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
 
-      const { latitude, longitude } = position;
+      if (images.length !== 0) {
+        const { latitude, longitude } = position;
 
-      const data = new FormData();
+        const data = new FormData();
 
-      data.append('name', name);
-      data.append('latitude', String(latitude));
-      data.append('longitude', String(longitude));
-      data.append('about', about);
-      data.append('instructions', instructions);
-      data.append('opening_hours', opening_hours);
-      data.append('open_on_weekends', String(open_on_weekends));
+        data.append('name', name);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('about', about);
+        data.append('instructions', instructions);
+        data.append('opening_hours', opening_hours);
+        data.append('open_on_weekends', String(open_on_weekends));
 
-      images.forEach(image => {
-        data.append('images', image);
-      });
+        images.forEach(image => {
+          data.append('images', image);
+        });
 
-      await api.post('orphanage', data);
+        await api.post('orphanage', data);
 
-      alert('Cadastro realizado com sucesso!');
-
-      history.push('/app');
+        toast.success('Cadastro realizado com sucesso', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        history.push('/app');
+      } else {
+        toast.error('Adicione fotos para o orfanato!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     },
     [
       about,
@@ -108,11 +142,13 @@ export default function CreateOrphanage() {
                 url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`}
               />
 
-              <Marker
-                interactive={false}
-                icon={MapIcon}
-                position={[position.latitude, position.longitude]}
-              />
+              {position.latitude !== 0 && (
+                <Marker
+                  interactive={false}
+                  icon={MapIcon}
+                  position={[position.latitude, position.longitude]}
+                />
+              )}
             </Map>
 
             <div className="input-block">
@@ -171,11 +207,20 @@ export default function CreateOrphanage() {
 
             <div className="input-block">
               <label htmlFor="opening_hours">Horário de funcionamento</label>
-              <input
-                id="opening_hours"
-                value={opening_hours}
-                onChange={e => setOpeningHours(e.target.value)}
-              />
+              <div className="input-block-wrapper">
+                <input
+                  id="opening_hours"
+                  value={opening_hours_start}
+                  onChange={e => setOpeningHoursStart(e.target.value)}
+                  type="time"
+                />
+                <input
+                  id="opening_hours"
+                  value={opening_hours_end}
+                  onChange={e => setOpeningHoursEnd(e.target.value)}
+                  type="time"
+                />
+              </div>
             </div>
 
             <div className="input-block">

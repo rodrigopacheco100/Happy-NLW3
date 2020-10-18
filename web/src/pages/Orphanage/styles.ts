@@ -154,33 +154,6 @@ export const Container = styled.div`
             color: #ff669d;
           }
         }
-
-        button.contact-button {
-          margin-top: 64px;
-
-          width: 100%;
-          height: 64px;
-          border: 0;
-          cursor: pointer;
-          background: #3cdc8c;
-          border-radius: 20px;
-          color: #ffffff;
-          font-weight: 800;
-
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          transition: background-color 0.2s;
-        }
-
-        button.contact-button svg {
-          margin-right: 16px;
-        }
-
-        button.contact-button:hover {
-          background: #36cf82;
-        }
       }
     }
   }

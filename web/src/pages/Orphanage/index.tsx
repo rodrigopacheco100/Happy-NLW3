@@ -134,11 +134,6 @@ export default function Orphanage() {
                 </div>
               )}
             </div>
-
-            <button type="button" className="contact-button">
-              <FaWhatsapp size={20} color="#FFF" />
-              Entrar em contato
-            </button>
           </div>
         </div>
       </main>

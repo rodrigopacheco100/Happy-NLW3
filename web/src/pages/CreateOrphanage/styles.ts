@@ -44,6 +44,15 @@ export const Container = styled.div`
       }
 
       .input-block {
+        .input-block-wrapper {
+          display: flex;
+          flex-direction: row;
+
+          input + input {
+            margin-left: 16px;
+          }
+        }
+
         & + .input-block {
           margin-top: 24px;
         }
